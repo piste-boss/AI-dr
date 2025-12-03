@@ -1,0 +1,257 @@
+import { type DragEvent, useMemo, useState } from 'react'
+import type { AnalysisResult, ModeType, ProfileInput } from '../types'
+import { exportAnalysisToPdf } from '../services/export'
+import { analyzePdfWithGemini } from '../services/gemini'
+import { extractTextFromPdf } from '../services/pdf'
+import { useSettings } from '../state/SettingsContext.tsx'
+
+const modeCopy: Record<
+  ModeType,
+  { title: string; accent: string; promptLabel: string; description: string }
+> = {
+  medical: {
+    title: 'メディカルモード',
+    accent: '#60a5fa',
+    promptLabel: 'メディカル用プロンプト',
+    description: '検査結果や問診票から臨床上の留意点を整理し、受診や追加検査の判断を補助します。',
+  },
+  fitness: {
+    title: 'フィットネスモード',
+    accent: '#f97316',
+    promptLabel: 'フィットネス用プロンプト',
+    description:
+      '身体計測とPDF資料（メニュー・食事ログ・検診結果など）をもとに食事と運動を提案します。',
+  },
+}
+
+type RunStatus = 'idle' | 'extracting' | 'analyzing'
+
+type Props = {
+  mode: ModeType
+}
+
+export default function ModePage({ mode }: Props) {
+  const { settings } = useSettings()
+  const [file, setFile] = useState<File | null>(null)
+  const [pdfText, setPdfText] = useState('')
+  const [analysis, setAnalysis] = useState<AnalysisResult | null>(null)
+  const [status, setStatus] = useState<RunStatus>('idle')
+  const [error, setError] = useState<string | null>(null)
+  const [dragActive, setDragActive] = useState(false)
+  const [profile, setProfile] = useState<ProfileInput>({
+    age: '',
+    height: '',
+    weight: '',
+  })
+
+  const info = modeCopy[mode]
+  const promptSnippet = useMemo(() => {
+    const prompt = mode === 'medical' ? settings.medicalPrompt : settings.fitnessPrompt
+    return prompt.length > 140 ? `${prompt.slice(0, 140)}…` : prompt
+  }, [mode, settings.fitnessPrompt, settings.medicalPrompt])
+
+  const isBusy = status !== 'idle'
+
+  const handleFile = (nextFile: File) => {
+    if (!nextFile.type.includes('pdf')) {
+      setError('PDFファイルを選択してください。')
+      return
+    }
+    setFile(nextFile)
+    setError(null)
+    setAnalysis(null)
+  }
+
+  const onDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    setDragActive(false)
+    const dropped = event.dataTransfer.files?.[0]
+    if (dropped) handleFile(dropped)
+  }
+
+  const onAnalyze = async () => {
+    if (!file) {
+      setError('PDFファイルをアップロードしてください。')
+      return
+    }
+    setError(null)
+    try {
+      setStatus('extracting')
+      const extractedText = await extractTextFromPdf(file)
+      setPdfText(extractedText)
+
+      setStatus('analyzing')
+      const result = await analyzePdfWithGemini({
+        mode,
+        pdfText: extractedText,
+        profile,
+        settings,
+      })
+      setAnalysis(result)
+    } catch (err) {
+      console.error(err)
+      setError('解析中に問題が発生しました。もう一度お試しください。')
+    } finally {
+      setStatus('idle')
+    }
+  }
+
+  const handleDownload = () => {
+    if (analysis) {
+      exportAnalysisToPdf(mode, analysis, profile)
+    }
+  }
+
+  return (
+    <section className="mode-page">
+      <header className="mode-header" style={{ borderColor: info.accent }}>
+        <div>
+          <p className="eyebrow">選択中のモード</p>
+          <h1>{info.title}</h1>
+          <p className="lede">{info.description}</p>
+        </div>
+        <div className="pill" style={{ backgroundColor: info.accent }}>
+          Gemini連携
+        </div>
+      </header>
+
+      <div className="grid two-columns">
+        <div className="card">
+          <div className="card-header">
+            <div>
+              <p className="eyebrow">ステップ1</p>
+              <h3>PDFアップロード</h3>
+            </div>
+            {file && <button className="btn link" onClick={() => setFile(null)}>クリア</button>}
+          </div>
+          <div
+            className={`dropzone ${dragActive ? 'dragging' : ''}`}
+            onDragOver={(e) => {
+              e.preventDefault()
+              setDragActive(true)
+            }}
+            onDragLeave={() => setDragActive(false)}
+            onDrop={onDrop}
+          >
+            <input
+              type="file"
+              accept="application/pdf"
+              id="pdf-input"
+              onChange={(e) => {
+                const uploaded = e.target.files?.[0]
+                if (uploaded) handleFile(uploaded)
+              }}
+            />
+            <p className="dropzone-text">
+              ここにPDFをドロップ、または <label htmlFor="pdf-input">ファイルを選択</label>
+            </p>
+            <p className="dropzone-hint">医療レポート、検査結果、食事ログなど</p>
+            {file && <div className="file-name">選択中: {file.name}</div>}
+          </div>
+
+          <div className="inputs-row">
+            <div className="input">
+              <label>年齢</label>
+              <input
+                type="number"
+                placeholder="例: 42"
+                value={profile.age}
+                onChange={(e) => setProfile((p) => ({ ...p, age: e.target.value }))}
+              />
+            </div>
+            <div className="input">
+              <label>身長 (cm)</label>
+              <input
+                type="number"
+                placeholder="例: 168"
+                value={profile.height}
+                onChange={(e) => setProfile((p) => ({ ...p, height: e.target.value }))}
+              />
+            </div>
+            <div className="input">
+              <label>体重 (kg)</label>
+              <input
+                type="number"
+                placeholder="例: 62"
+                value={profile.weight}
+                onChange={(e) => setProfile((p) => ({ ...p, weight: e.target.value }))}
+              />
+            </div>
+          </div>
+
+          <div className="actions">
+            <button className="btn primary" disabled={isBusy} onClick={onAnalyze}>
+              {status === 'extracting' && 'PDF解析中...'}
+              {status === 'analyzing' && 'AI要約中...'}
+              {status === 'idle' && 'Geminiで解析する'}
+            </button>
+            {analysis && (
+              <button className="btn secondary" onClick={handleDownload}>
+                PDFで出力
+              </button>
+            )}
+          </div>
+          {error && <p className="error">{error}</p>}
+          {!settings.apiKey && (
+            <p className="warning">
+              APIキー未設定です。管理画面でキーとモデルを登録するとGeminiを呼び出せます。
+            </p>
+          )}
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            <div>
+              <p className="eyebrow">ステップ2</p>
+              <h3>結果と提案</h3>
+            </div>
+            {analysis && (
+              <span className="pill subtle">生成済み</span>
+            )}
+          </div>
+          {analysis ? (
+            <div className="analysis">
+              <section>
+                <h4>要約</h4>
+                <p>{analysis.summary}</p>
+              </section>
+              <section>
+                <h4>食事アドバイス</h4>
+                <p>{analysis.dietAdvice}</p>
+              </section>
+              <section>
+                <h4>ビタミン・ミネラル</h4>
+                <p>{analysis.vitaminsAndMinerals}</p>
+              </section>
+              <section>
+                <h4>運動プラン</h4>
+                <p>{analysis.exercisePlan}</p>
+              </section>
+            </div>
+          ) : (
+            <div className="placeholder">
+              <p>PDFのアップロードと「Geminiで解析する」で結果を表示します。</p>
+              {pdfText && (
+                <details>
+                  <summary>抽出されたPDFテキストを見る</summary>
+                  <pre className="pdf-preview">{pdfText.slice(0, 1800) || 'テキストなし'}</pre>
+                </details>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="card prompt-card">
+        <div className="card-header">
+          <div>
+            <p className="eyebrow">ステップ3</p>
+            <h3>{info.promptLabel}</h3>
+          </div>
+          <span className="pill subtle">管理画面で編集可能</span>
+        </div>
+        <p className="prompt-preview">{promptSnippet}</p>
+      </div>
+    </section>
+  )
+}
