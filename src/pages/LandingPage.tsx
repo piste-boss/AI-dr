@@ -1,21 +1,14 @@
 import { Link } from 'react-router-dom'
 import type { ModeType } from '../types'
 
-const modes: Record<
-  ModeType,
-  { title: string; description: string; accent: string; badge: string }
-> = {
+const modes: Record<ModeType, { title: string; description: string }> = {
   medical: {
     title: 'メディカルモード',
     description: '処方・検査結果・問診票などを解析し、リスクと次の一手を要約。',
-    accent: '#60a5fa',
-    badge: '医療向け',
   },
   fitness: {
     title: 'フィットネスモード',
     description: '身体データとPDFの内容から食事と運動を提案。実行しやすいメニューを提示。',
-    accent: '#f97316',
-    badge: 'トレーニング向け',
   },
 }
 
@@ -46,9 +39,6 @@ export default function LandingPage() {
           const info = modes[mode]
           return (
             <div key={mode} className="mode-card">
-              <div className="mode-card__badge" style={{ backgroundColor: info.accent }}>
-                {info.badge}
-              </div>
               <div className="mode-card__title">{info.title}</div>
               <p className="mode-card__desc">{info.description}</p>
               <Link to={`/mode/${mode}`} className="btn subtle">
