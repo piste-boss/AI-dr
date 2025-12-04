@@ -189,7 +189,7 @@ export default function ModePage({ mode }: Props) {
             <button className="btn primary" disabled={isBusy} onClick={onAnalyze}>
               {status === 'extracting' && 'PDF解析中...'}
               {status === 'analyzing' && 'AI要約中...'}
-              {status === 'idle' && 'Geminiで解析する'}
+              {status === 'idle' && 'AI解析'}
             </button>
             {analysis && (
               <button className="btn secondary" onClick={handleDownload}>
@@ -236,7 +236,7 @@ export default function ModePage({ mode }: Props) {
             </div>
           ) : (
             <div className="placeholder">
-              <p>PDFのアップロードと「Geminiで解析する」で結果を表示します。</p>
+              <p>PDFのアップロードと「AI解析」で結果を表示します。</p>
               {pdfText && (
                 <details>
                   <summary>抽出されたPDFテキストを見る</summary>
