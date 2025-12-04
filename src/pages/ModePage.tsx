@@ -91,6 +91,7 @@ export default function ModePage({ mode }: Props) {
   }
 
   const showDoctorIcon = mode === 'medical'
+  const showFitnessIcon = mode === 'fitness'
 
   return (
     <section className="mode-page">
@@ -110,6 +111,16 @@ export default function ModePage({ mode }: Props) {
               <rect x="6" y="4" width="12" height="15" rx="1" ry="1" stroke="#ffffff" strokeWidth="1.5" />
               <path d="M10 10h4m-2-2v4" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
               <path d="M8 16h2m4 0h2" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          </span>
+        )}
+        {showFitnessIcon && (
+          <span className="pill pictogram" aria-label="フィットネスアイコン" style={{ backgroundColor: info.accent }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect x="4" y="10" width="3" height="4" rx="0.8" fill="#ffffff" />
+              <rect x="17" y="10" width="3" height="4" rx="0.8" fill="#ffffff" />
+              <rect x="7" y="11" width="10" height="2" rx="0.8" fill="#ffffff" />
+              <rect x="9" y="8" width="6" height="8" rx="1" stroke="#ffffff" strokeWidth="1.4" />
             </svg>
           </span>
         )}
