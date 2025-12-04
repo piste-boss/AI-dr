@@ -42,10 +42,9 @@ export default function ModePage({ mode }: Props) {
   const isBusy = status !== 'idle'
 
   useEffect(() => {
-    setFile(null)
-    setPdfText('')
     setAnalysis(null)
     setError(null)
+    setStatus('idle')
   }, [mode])
 
   const handleFile = (nextFile: File) => {
