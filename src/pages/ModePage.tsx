@@ -114,7 +114,7 @@ export default function ModePage({ mode }: Props) {
         </div>
         {showDoctorIcon && (
           <span className="pill pictogram" aria-label="病院アイコン" style={{ backgroundColor: info.accent }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
                 d="M6.5 4h11c.83 0 1.5.67 1.5 1.5v13c0 .28-.22.5-.5.5H5c-.28 0-.5-.22-.5-.5v-13C4.5 4.67 5.17 4 6.5 4Z"
                 fill="#ffffff"
