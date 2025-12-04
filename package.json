@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@netlify/blobs": "^4.1.0",
+    "@netlify/functions": "^2.8.2",
     "jspdf": "^3.0.4",
     "pdfjs-dist": "^5.4.449",
     "react": "^19.2.0",
