@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { type DragEvent, useState } from 'react'
 import type { AnalysisResult, ModeType, ProfileInput } from '../types'
 import { exportAnalysisToPdf } from '../services/export'
@@ -92,10 +93,11 @@ export default function ModePage({ mode }: Props) {
 
   const showDoctorIcon = mode === 'medical'
   const showFitnessIcon = mode === 'fitness'
+  const accentStyle = { borderColor: info.accent }
 
   return (
     <section className="mode-page">
-      <header className="mode-header" style={{ borderColor: info.accent }}>
+      <header className="mode-header" style={accentStyle}>
         <div>
           <h1>{info.title}</h1>
         </div>
@@ -128,6 +130,22 @@ export default function ModePage({ mode }: Props) {
           </span>
         )}
       </header>
+      <div className="mode-switch">
+        <Link
+          to="/mode/medical"
+          className="btn subtle"
+          style={mode === 'medical' ? { borderColor: info.accent } : {}}
+        >
+          メディカルへ
+        </Link>
+        <Link
+          to="/mode/fitness"
+          className="btn subtle"
+          style={mode === 'fitness' ? { borderColor: info.accent } : {}}
+        >
+          フィットネスへ
+        </Link>
+      </div>
 
       <div className="grid two-columns">
         <div className="card">
