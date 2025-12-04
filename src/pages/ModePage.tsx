@@ -1,20 +1,18 @@
-import { type DragEvent, useMemo, useState } from 'react'
+import { type DragEvent, useState } from 'react'
 import type { AnalysisResult, ModeType, ProfileInput } from '../types'
 import { exportAnalysisToPdf } from '../services/export'
 import { analyzePdfWithGemini } from '../services/gemini'
 import { extractTextFromPdf } from '../services/pdf'
 import { useSettings } from '../state/SettingsContext.tsx'
 
-const modeCopy: Record<ModeType, { title: string; accent: string; promptLabel: string }> = {
+const modeCopy: Record<ModeType, { title: string; accent: string }> = {
   medical: {
     title: 'メディカルモード',
     accent: '#60a5fa',
-    promptLabel: 'メディカル用プロンプト',
   },
   fitness: {
     title: 'フィットネスモード',
     accent: '#f97316',
-    promptLabel: 'フィットネス用プロンプト',
   },
 }
 
@@ -39,10 +37,6 @@ export default function ModePage({ mode }: Props) {
   })
 
   const info = modeCopy[mode]
-  const promptSnippet = useMemo(() => {
-    const prompt = mode === 'medical' ? settings.medicalPrompt : settings.fitnessPrompt
-    return prompt.length > 140 ? `${prompt.slice(0, 140)}…` : prompt
-  }, [mode, settings.fitnessPrompt, settings.medicalPrompt])
 
   const isBusy = status !== 'idle'
 
@@ -218,16 +212,6 @@ export default function ModePage({ mode }: Props) {
         </div>
       </div>
 
-      <div className="card prompt-card">
-        <div className="card-header">
-          <div>
-            <p className="eyebrow">ステップ3</p>
-            <h3>{info.promptLabel}</h3>
-          </div>
-          <span className="pill subtle">管理画面で編集可能</span>
-        </div>
-        <p className="prompt-preview">{promptSnippet}</p>
-      </div>
     </section>
   )
 }
