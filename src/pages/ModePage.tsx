@@ -117,20 +117,13 @@ export default function ModePage({ mode }: Props) {
         {showFitnessIcon && (
           <span className="pill pictogram" aria-label="フィットネスアイコン" style={{ backgroundColor: info.accent }}>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path
-                d="M8 15.5c.6 1.4 2.2 2.3 4.2 1.3l3.4-1.8c1.1-.6 1.7-2.1.7-3.2l-1.8-2"
-                stroke="#ffffff"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-              <path
-                d="M12.5 8.5c-.5-1.2-1.5-2-2.8-1.5-.9.4-1.2 1.5-.8 2.6l.9 2.1"
-                stroke="#ffffff"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-              <path d="M8.8 11 7 11.8c-1 .5-1.4 1.7-.9 2.7.4.9 1.4 1.2 2.3.7l1.2-.6" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
-              <circle cx="14.8" cy="8.2" r="1.1" fill="#ffffff" />
+              <circle cx="14.5" cy="6" r="1.3" fill="#ffffff" />
+              <path d="M11 8.5l2.2 1.2c.6.3 1 .9 1 1.6v.2c0 .7-.4 1.3-1 1.6l-2.1 1" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M12.5 10.2 10 10" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M11.2 13.1 9 15" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M12 14.8 13.5 17" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M9 15h-2" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M13.5 17H11" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </span>
         )}
