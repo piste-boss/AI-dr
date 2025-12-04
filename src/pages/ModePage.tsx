@@ -116,7 +116,7 @@ export default function ModePage({ mode }: Props) {
         )}
         {showFitnessIcon && (
           <span className="pill pictogram" aria-label="フィットネスアイコン" style={{ backgroundColor: info.accent }}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <circle cx="14.5" cy="6" r="1.3" fill="#ffffff" />
               <path d="M11 8.5l2.2 1.2c.6.3 1 .9 1 1.6v.2c0 .7-.4 1.3-1 1.6l-2.1 1" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
               <path d="M12.5 10.2 10 10" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />

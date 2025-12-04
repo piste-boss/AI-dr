@@ -242,9 +242,9 @@ nav a.active {
 .pill.pictogram {
   display: grid;
   place-items: center;
-  padding: 12px;
-  width: 60px;
-  height: 60px;
+  padding: 14px;
+  width: 70px;
+  height: 70px;
   border-radius: 12px;
 }
 
