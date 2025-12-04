@@ -1,14 +1,25 @@
 import jsPDF from 'jspdf'
+import fontBase64 from '../assets/NotoSansJP-Regular.ttf?base64'
 import type { AnalysisResult, ModeType, ProfileInput } from '../types'
 
 const FONT_NAME = 'NotoSansJP'
 const FONT_FILE = 'NotoSansJP-Regular.ttf'
 const FONT_PATH = '/fonts/NotoSansJP-Regular.ttf'
+const EMBEDDED_FONT = fontBase64.replace(/^data:.*;base64,/, '')
 
 let fontReady = false
 
 async function ensureJapaneseFont(doc: jsPDF) {
   if (fontReady) return
+  try {
+    doc.addFileToVFS(FONT_FILE, EMBEDDED_FONT)
+    doc.addFont(FONT_FILE, FONT_NAME, 'normal', 'Identity-H')
+    fontReady = true
+    return
+  } catch (error) {
+    console.warn('Inline font failed, fallback to fetch', error)
+  }
+
   const response = await fetch(FONT_PATH)
   const buffer = await response.arrayBuffer()
   const base64 = arrayBufferToBase64(buffer)
