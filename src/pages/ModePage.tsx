@@ -133,17 +133,15 @@ export default function ModePage({ mode }: Props) {
       <div className="mode-switch">
         <Link
           to="/mode/medical"
-          className="btn subtle"
-          style={mode === 'medical' ? { borderColor: info.accent } : {}}
+          className={`btn ${mode === 'medical' ? 'primary' : 'ghost'}`}
         >
-          メディカルへ
+          メディカル
         </Link>
         <Link
           to="/mode/fitness"
-          className="btn subtle"
-          style={mode === 'fitness' ? { borderColor: info.accent } : {}}
+          className={`btn ${mode === 'fitness' ? 'secondary' : 'ghost'}`}
         >
-          フィットネスへ
+          フィットネス
         </Link>
       </div>
 

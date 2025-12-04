@@ -269,10 +269,6 @@ nav a.active {
   margin: 8px 0 14px;
 }
 
-.mode-switch .btn.subtle {
-  padding: 10px 12px;
-}
-
 .card-header {
   display: flex;
   justify-content: space-between;
