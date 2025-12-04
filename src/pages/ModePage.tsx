@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { type DragEvent, useState } from 'react'
+import { type DragEvent, useEffect, useState } from 'react'
 import type { AnalysisResult, ModeType, ProfileInput } from '../types'
 import { exportAnalysisToPdf } from '../services/export'
 import { analyzePdfWithGemini } from '../services/gemini'
@@ -40,6 +40,13 @@ export default function ModePage({ mode }: Props) {
   const info = modeCopy[mode]
 
   const isBusy = status !== 'idle'
+
+  useEffect(() => {
+    setFile(null)
+    setPdfText('')
+    setAnalysis(null)
+    setError(null)
+  }, [mode])
 
   const handleFile = (nextFile: File) => {
     if (!nextFile.type.includes('pdf')) {
