@@ -22,8 +22,12 @@ export default function AdminPage() {
           <h1>管理画面</h1>
           <p className="lede">APIキーとプロンプトをここで編集できます。変更はローカルに保存されます。</p>
         </div>
-        {saved && <span className="pill subtle">保存しました</span>}
       </header>
+      {saved && (
+        <div className="save-toast-overlay" role="status" aria-live="polite">
+          <div className="save-toast">保存しました</div>
+        </div>
+      )}
 
       <form className="card" onSubmit={onSubmit}>
         <div className="input">

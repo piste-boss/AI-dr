@@ -277,6 +277,25 @@ nav a.active {
   margin-bottom: 10px;
 }
 
+.save-toast-overlay {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.save-toast {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  color: #0b1021;
+  padding: 14px 18px;
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(59, 130, 246, 0.35);
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .dropzone {
   border: 1px dashed rgba(255, 255, 255, 0.2);
   border-radius: 14px;
