@@ -13,7 +13,7 @@ async function ensureJapaneseFont(doc: jsPDF) {
   const buffer = await response.arrayBuffer()
   const base64 = arrayBufferToBase64(buffer)
   doc.addFileToVFS(FONT_FILE, base64)
-  doc.addFont(FONT_FILE, FONT_NAME, 'normal')
+  doc.addFont(FONT_FILE, FONT_NAME, 'normal', 'Identity-H')
   fontReady = true
 }
 
