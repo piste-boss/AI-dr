@@ -2,8 +2,8 @@ import jsPDF from 'jspdf'
 import type { AnalysisResult, ModeType, ProfileInput } from '../types'
 
 const FONT_NAME = 'NotoSansJP'
-const FONT_FILE = 'NotoSansJP-Regular.otf'
-const FONT_PATH = '/fonts/NotoSansJP-Regular.otf'
+const FONT_FILE = 'NotoSansJP-Regular.ttf'
+const FONT_PATH = '/fonts/NotoSansJP-Regular.ttf'
 
 let fontReady = false
 
