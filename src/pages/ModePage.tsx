@@ -120,7 +120,10 @@ export default function ModePage({ mode }: Props) {
               <rect x="4" y="10" width="3" height="4" rx="0.8" fill="#ffffff" />
               <rect x="17" y="10" width="3" height="4" rx="0.8" fill="#ffffff" />
               <rect x="7" y="11" width="10" height="2" rx="0.8" fill="#ffffff" />
-              <rect x="9" y="8" width="6" height="8" rx="1" stroke="#ffffff" strokeWidth="1.4" />
+              <path d="M9 9.2h6v5.6H9z" stroke="#ffffff" strokeWidth="1.6" />
+              <path d="M12 7v3" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" />
+              <path d="M9.5 16.5 8 18" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" />
+              <path d="M14.5 16.5 16 18" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" />
             </svg>
           </span>
         )}
