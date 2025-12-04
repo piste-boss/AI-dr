@@ -32,7 +32,7 @@ export default function ModePage({ mode }: Props) {
   const [status, setStatus] = useState<RunStatus>('idle')
   const [error, setError] = useState<string | null>(null)
   const [dragActive, setDragActive] = useState(false)
-  const [profile, setProfile] = useState<ProfileInput>({
+  const [profile] = useState<ProfileInput>({
     age: '',
     height: '',
     weight: '',
@@ -153,36 +153,6 @@ export default function ModePage({ mode }: Props) {
             </p>
             <p className="dropzone-hint">医療レポート、検査結果、食事ログなど</p>
             {file && <div className="file-name">選択中: {file.name}</div>}
-          </div>
-
-          <div className="inputs-row">
-            <div className="input">
-              <label>年齢</label>
-              <input
-                type="number"
-                placeholder="例: 42"
-                value={profile.age}
-                onChange={(e) => setProfile((p) => ({ ...p, age: e.target.value }))}
-              />
-            </div>
-            <div className="input">
-              <label>身長 (cm)</label>
-              <input
-                type="number"
-                placeholder="例: 168"
-                value={profile.height}
-                onChange={(e) => setProfile((p) => ({ ...p, height: e.target.value }))}
-              />
-            </div>
-            <div className="input">
-              <label>体重 (kg)</label>
-              <input
-                type="number"
-                placeholder="例: 62"
-                value={profile.weight}
-                onChange={(e) => setProfile((p) => ({ ...p, weight: e.target.value }))}
-              />
-            </div>
           </div>
 
           <div className="actions">
