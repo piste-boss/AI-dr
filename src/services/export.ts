@@ -1,28 +1,37 @@
 import jsPDF from 'jspdf'
-import fontBase64 from '../assets/NotoSansJP-Regular.ttf?base64'
+import fontUrl from '../assets/NotoSansJP-Regular.ttf?url'
 import type { AnalysisResult, ModeType, ProfileInput } from '../types'
 
 const FONT_NAME = 'NotoSansJP'
 const FONT_FILE = 'NotoSansJP-Regular.ttf'
-const FONT_PATH = '/fonts/NotoSansJP-Regular.ttf'
-const EMBEDDED_FONT = fontBase64.replace(/^data:.*;base64,/, '')
+const FALLBACK_FONT_PATH = '/fonts/NotoSansJP-Regular.ttf'
 
 let fontReady = false
+let fontDataPromise: Promise<string> | null = null
+
+async function loadFontData() {
+  if (fontDataPromise) return fontDataPromise
+
+  fontDataPromise = fetch(fontUrl)
+    .then((res) => {
+      if (!res.ok) throw new Error(`Failed to load font: ${res.status}`)
+      return res.arrayBuffer()
+    })
+    .catch((error) => {
+      console.warn('Inline font fetch failed, fallback to public font', error)
+      return fetch(FALLBACK_FONT_PATH).then((res) => {
+        if (!res.ok) throw new Error(`Fallback font fetch failed: ${res.status}`)
+        return res.arrayBuffer()
+      })
+    })
+    .then(arrayBufferToBase64)
+
+  return fontDataPromise
+}
 
 async function ensureJapaneseFont(doc: jsPDF) {
   if (fontReady) return
-  try {
-    doc.addFileToVFS(FONT_FILE, EMBEDDED_FONT)
-    doc.addFont(FONT_FILE, FONT_NAME, 'normal', 'Identity-H')
-    fontReady = true
-    return
-  } catch (error) {
-    console.warn('Inline font failed, fallback to fetch', error)
-  }
-
-  const response = await fetch(FONT_PATH)
-  const buffer = await response.arrayBuffer()
-  const base64 = arrayBufferToBase64(buffer)
+  const base64 = await loadFontData()
   doc.addFileToVFS(FONT_FILE, base64)
   doc.addFont(FONT_FILE, FONT_NAME, 'normal', 'Identity-H')
   fontReady = true
