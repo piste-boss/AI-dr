@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react'
+import { type ChangeEvent, type FormEvent, useRef, useState } from 'react'
 import { useSettings } from '../state/SettingsContext.tsx'
 import type { Settings } from '../state/SettingsContext.tsx'
 
@@ -6,6 +6,8 @@ export default function AdminPage() {
   const { settings, updateSettings } = useSettings()
   const [draft, setDraft] = useState<Settings>(settings)
   const [saved, setSaved] = useState(false)
+  const [importError, setImportError] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -14,13 +16,46 @@ export default function AdminPage() {
     setTimeout(() => setSaved(false), 1800)
   }
 
+  const onExport = () => {
+    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'ai-dr-settings.json'
+    link.click()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  }
+
+  const onImport = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(String(reader.result)) as Partial<Settings>
+        const merged = { ...settings, ...parsed }
+        updateSettings(merged)
+        setDraft(merged)
+        setSaved(true)
+        setImportError(null)
+        setTimeout(() => setSaved(false), 1800)
+      } catch (error) {
+        console.error(error)
+        setImportError('インポートに失敗しました。JSONファイルを確認してください。')
+      } finally {
+        if (fileInputRef.current) fileInputRef.current.value = ''
+      }
+    }
+    reader.readAsText(file)
+  }
+
   return (
     <section className="admin">
       <header className="mode-header">
         <div>
           <p className="eyebrow">設定</p>
           <h1>管理画面</h1>
-          <p className="lede">APIキーとプロンプトをここで編集できます。変更はローカルに保存されます。</p>
+          <p className="lede">APIキーとプロンプトをここで編集できます。変更はローカルに保存されます。別端末ではエクスポート/インポートしてください。</p>
         </div>
       </header>
       {saved && (
@@ -80,7 +115,29 @@ export default function AdminPage() {
           >
             元に戻す
           </button>
+          <button
+            type="button"
+            className="btn secondary"
+            onClick={onExport}
+          >
+            設定をエクスポート
+          </button>
+          <button
+            type="button"
+            className="btn ghost"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            設定をインポート
+          </button>
         </div>
+        {importError && <p className="error">{importError}</p>}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/json"
+          style={{ display: 'none' }}
+          onChange={onImport}
+        />
       </form>
     </section>
   )
