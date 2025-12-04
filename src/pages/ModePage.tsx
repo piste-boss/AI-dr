@@ -102,6 +102,8 @@ export default function ModePage({ mode }: Props) {
     }
   }
 
+  const showDoctorIcon = mode === 'medical'
+
   return (
     <section className="mode-page">
       <header className="mode-header" style={{ borderColor: info.accent }}>
@@ -110,9 +112,21 @@ export default function ModePage({ mode }: Props) {
           <h1>{info.title}</h1>
           <p className="lede">{info.description}</p>
         </div>
-        <div className="pill" style={{ backgroundColor: info.accent }}>
-          Gemini連携
-        </div>
+        {showDoctorIcon && (
+          <span className="pill pictogram" aria-label="病院アイコン" style={{ backgroundColor: info.accent }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M6.5 4h11c.83 0 1.5.67 1.5 1.5v13c0 .28-.22.5-.5.5H5c-.28 0-.5-.22-.5-.5v-13C4.5 4.67 5.17 4 6.5 4Z"
+                fill="#ffffff"
+                stroke="none"
+                opacity="0.12"
+              />
+              <rect x="6" y="4" width="12" height="15" rx="1" ry="1" stroke="#ffffff" strokeWidth="1.5" />
+              <path d="M10 10h4m-2-2v4" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" />
+              <path d="M8 16h2m4 0h2" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          </span>
+        )}
       </header>
 
       <div className="grid two-columns">

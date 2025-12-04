@@ -144,6 +144,13 @@ nav a.active {
   border-color: var(--border);
 }
 
+.btn.fitness {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px rgba(234, 88, 12, 0.3);
+  color: #fff;
+}
+
 .btn.ghost {
   border-color: rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
@@ -230,6 +237,15 @@ nav a.active {
 .pill.subtle {
   background: rgba(255, 255, 255, 0.08);
   color: var(--text);
+}
+
+.pill.pictogram {
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
 }
 
 .grid.two-columns {
