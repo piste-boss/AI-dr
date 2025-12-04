@@ -95,6 +95,11 @@ export default function ModePage({ mode }: Props) {
   const showFitnessIcon = mode === 'fitness'
   const accentStyle = { borderColor: info.accent }
 
+  const formatPreview = (text: string) => {
+    if (!text) return 'テキストなし'
+    return text.replace(/(.{80})/g, '$1\n')
+  }
+
   return (
     <section className="mode-page">
       <header className="mode-header" style={accentStyle}>
@@ -234,7 +239,7 @@ export default function ModePage({ mode }: Props) {
               {pdfText && (
                 <details>
                   <summary>抽出されたPDFテキストを見る</summary>
-                  <pre className="pdf-preview">{pdfText.slice(0, 1800) || 'テキストなし'}</pre>
+                  <pre className="pdf-preview">{formatPreview(pdfText.slice(0, 1800))}</pre>
                 </details>
               )}
             </div>
