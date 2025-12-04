@@ -211,7 +211,7 @@ export default function ModePage({ mode }: Props) {
             </div>
           ) : (
             <div className="placeholder">
-              <p>PDFのアップロードと「AI解析」で結果を表示します。</p>
+              <p>AI解析結果が表示されます。</p>
               {pdfText && (
                 <details>
                   <summary>抽出されたPDFテキストを見る</summary>
