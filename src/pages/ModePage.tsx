@@ -5,22 +5,16 @@ import { analyzePdfWithGemini } from '../services/gemini'
 import { extractTextFromPdf } from '../services/pdf'
 import { useSettings } from '../state/SettingsContext.tsx'
 
-const modeCopy: Record<
-  ModeType,
-  { title: string; accent: string; promptLabel: string; description: string }
-> = {
+const modeCopy: Record<ModeType, { title: string; accent: string; promptLabel: string }> = {
   medical: {
     title: 'メディカルモード',
     accent: '#60a5fa',
     promptLabel: 'メディカル用プロンプト',
-    description: '検査結果や問診票から臨床上の留意点を整理し、受診や追加検査の判断を補助します。',
   },
   fitness: {
     title: 'フィットネスモード',
     accent: '#f97316',
     promptLabel: 'フィットネス用プロンプト',
-    description:
-      '身体計測とPDF資料（メニュー・食事ログ・検診結果など）をもとに食事と運動を提案します。',
   },
 }
 
@@ -108,9 +102,7 @@ export default function ModePage({ mode }: Props) {
     <section className="mode-page">
       <header className="mode-header" style={{ borderColor: info.accent }}>
         <div>
-          <p className="eyebrow">選択中のモード</p>
           <h1>{info.title}</h1>
-          <p className="lede">{info.description}</p>
         </div>
         {showDoctorIcon && (
           <span className="pill pictogram" aria-label="病院アイコン" style={{ backgroundColor: info.accent }}>
