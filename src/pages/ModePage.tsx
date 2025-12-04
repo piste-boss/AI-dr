@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { type DragEvent, useEffect, useState } from 'react'
 import type { AnalysisResult, ModeType, ProfileInput } from '../types'
-import { exportAnalysisToPdf } from '../services/export'
 import { analyzePdfWithGemini } from '../services/gemini'
 import { extractTextFromPdf } from '../services/pdf'
 import { useSettings } from '../state/SettingsContext.tsx'
@@ -88,12 +87,6 @@ export default function ModePage({ mode }: Props) {
       setError('解析中に問題が発生しました。もう一度お試しください。')
     } finally {
       setStatus('idle')
-    }
-  }
-
-  const handleDownload = async () => {
-    if (analysis) {
-      await exportAnalysisToPdf(mode, analysis, profile)
     }
   }
 
@@ -196,11 +189,6 @@ export default function ModePage({ mode }: Props) {
               {status === 'analyzing' && 'AI診断中...'}
               {status === 'idle' && 'AI診断'}
             </button>
-            {analysis && (
-              <button className="btn secondary" onClick={() => void handleDownload()}>
-                PDFで出力
-              </button>
-            )}
           </div>
           {error && <p className="error">{error}</p>}
           {!settings.apiKey && (
