@@ -139,7 +139,7 @@ export default function ModePage({ mode }: Props) {
         </Link>
         <Link
           to="/mode/fitness"
-          className={`btn ${mode === 'fitness' ? 'secondary' : 'ghost'}`}
+          className={`btn ${mode === 'fitness' ? 'fitness' : 'ghost'}`}
         >
           フィットネス
         </Link>
