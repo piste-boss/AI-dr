@@ -84,9 +84,9 @@ export default function ModePage({ mode }: Props) {
     }
   }
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (analysis) {
-      exportAnalysisToPdf(mode, analysis, profile)
+      await exportAnalysisToPdf(mode, analysis, profile)
     }
   }
 
@@ -170,7 +170,7 @@ export default function ModePage({ mode }: Props) {
               {status === 'idle' && 'AI診断'}
             </button>
             {analysis && (
-              <button className="btn secondary" onClick={handleDownload}>
+              <button className="btn secondary" onClick={() => void handleDownload()}>
                 PDFで出力
               </button>
             )}

@@ -1,13 +1,42 @@
 import jsPDF from 'jspdf'
 import type { AnalysisResult, ModeType, ProfileInput } from '../types'
 
-export function exportAnalysisToPdf(mode: ModeType, analysis: AnalysisResult, profile: ProfileInput) {
+const FONT_NAME = 'NotoSansJP'
+const FONT_FILE = 'NotoSansJP-Regular.otf'
+const FONT_PATH = '/fonts/NotoSansJP-Regular.otf'
+
+let fontReady = false
+
+async function ensureJapaneseFont(doc: jsPDF) {
+  if (fontReady) return
+  const response = await fetch(FONT_PATH)
+  const buffer = await response.arrayBuffer()
+  const base64 = arrayBufferToBase64(buffer)
+  doc.addFileToVFS(FONT_FILE, base64)
+  doc.addFont(FONT_FILE, FONT_NAME, 'normal')
+  fontReady = true
+}
+
+function arrayBufferToBase64(buffer: ArrayBuffer) {
+  const bytes = new Uint8Array(buffer)
+  let binary = ''
+  for (let i = 0; i < bytes.length; i += 1) {
+    binary += String.fromCharCode(bytes[i])
+  }
+  return btoa(binary)
+}
+
+export async function exportAnalysisToPdf(mode: ModeType, analysis: AnalysisResult, _profile: ProfileInput) {
   const doc = new jsPDF()
+  try {
+    await ensureJapaneseFont(doc)
+    doc.setFont(FONT_NAME, 'normal')
+  } catch (error) {
+    console.warn('Failed to load JP font, falling back to default', error)
+  }
+
   const lines = [
     `${mode === 'medical' ? 'メディカル' : 'フィットネス'}モード`,
-    `年齢: ${profile.age || '未入力'} / 身長: ${profile.height || '未入力'}cm / 体重: ${
-      profile.weight || '未入力'
-    }kg`,
     '',
     '要約',
     analysis.summary,
